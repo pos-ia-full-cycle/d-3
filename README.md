@@ -33,7 +33,9 @@ Análise manual realizada antes da criação da skill para identificar padrões 
 | 5 | **HIGH** | src/AppManager.js:83-128 | **N+1 com Callback Hell** — 4 níveis de callbacks, query por matrícula por aluno | 100 cursos × 50 alunos = 10.001 queries por requisição de relatório |
 | 6 | **HIGH** | src/AppManager.js:131-137 | **Delete sem cascade** — deleta usuário, deixa matrículas e pagamentos órfãos | O próprio código documenta o bug na mensagem de resposta |
 | 7 | **MEDIUM** | src/AppManager.js:80 | **Rota admin sem autenticação** — `/api/admin/financial-report` pública | Qualquer pessoa pode ver faturamento e dados de alunos |
-| 8 | **LOW** | src/AppManager.js:29-33 | **Nomes crípticos** — `u`, `e`, `p`, `cid`, `cc` sem semântica | Código ilegível sem decodificar intenção variável por variável |
+| 8 | **MEDIUM** | src/utils.js:9-10 | **Estado global mutável exportado** — `let globalCache = {}` e `let totalRevenue = 0` compartilhados entre requisições | Escritas concorrentes em `globalCache` via callbacks async sem sincronização; `totalRevenue` nunca atualizado — dead state enganoso |
+| 9 | **LOW** | src/app.js:13, src/AppManager.js:45, src/utils.js:13 | **Logging com `console.log()`** — sem timestamps, sem níveis, sem estrutura | Produção sem observabilidade; o log da linha 45 mistura `console.log` com dado sensível de cartão de crédito |
+| 10 | **LOW** | src/AppManager.js:29-33 | **Nomes crípticos** — `u`, `e`, `p`, `cid`, `cc` sem semântica | Código ilegível sem decodificar intenção variável por variável |
 
 ### Projeto 3 — task-manager-api (Python/Flask — Task Manager)
 
